@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EZYERROR HUB</title>
+
+  <!-- Firebase SDK -->
+  <<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA44m4CyIgEPenPFqBUBlUS_acIr2EBL1M",
+    authDomain: "bookmarkhub-37bc7.firebaseapp.com",
+    projectId: "bookmarkhub-37bc7",
+    storageBucket: "bookmarkhub-37bc7.firebasestorage.app",
+    messagingSenderId: "184561361064",
+    appId: "1:184561361064:web:bb58bf214154dd905aa29d",
+    measurementId: "G-D206Y124JS"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #000, #111, #050d1a);
+      color: #00ffee;
+      font-family: 'Share Tech Mono', monospace;
+      overflow: hidden;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 3rem;
+      letter-spacing: 2px;
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+      animation: glitch 1s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red; }
+      25% { text-shadow: -2px 0 cyan; }
+      50% { text-shadow: 2px 0 lime; }
+      75% { text-shadow: -2px 0 magenta; }
+      100% { text-shadow: 2px 0 red; }
+    }
+    .hub {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90vw; height: 90vh;
+      display: flex; flex-wrap: nowrap;
+      justify-content: center; align-items: center;
+      perspective: 1000px; overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+    }
+    .node {
+      scroll-snap-align: center;
+      min-width: 160px; height: 160px;
+      margin: 20px; border-radius: 50%;
+      background: rgba(0, 255, 255, 0.08);
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; border: 2px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 0 10px #00ffee44, 0 0 20px #00ffee22;
+      cursor: pointer; text-shadow: 0 0 5px #0ff;
+      animation: float 8s infinite ease-in-out;
+    }
+    .node a {
+      color: #0ff; text-decoration: none; font-weight: bold;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .node img {
+      width: 48px; height: 48px; margin-bottom: 5px;
+      filter: drop-shadow(0 0 5px #00ffeeaa);
+    }
+    .node:hover, .node.active {
+      transform: scale(1.1);
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffee;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .stars {
+      position: absolute;
+      width: 100%; height: 100%;
+      background: url('https://i.imgur.com/7HddBpt.png');
+      background-size: cover; opacity: 0.08; z-index: 0;
+      animation: drift 200s linear infinite;
+    }
+    @keyframes drift {
+      0% { background-position: 0 0; }
+      100% { background-position: -10000px 10000px; }
+    }
+    .scroll {
+      position: absolute;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: #0ff;
+      animation: scrollFade 2s infinite;
+      z-index: 1;
+    }
+    @keyframes scrollFade {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+    form {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem; border: 1px solid #0ff;
+      border-radius: 10px;
+      color: #0ff; font-size: 0.9rem;
+    }
+    form input, form button {
+      margin: 0.3rem 0; padding: 0.3rem;
+      border-radius: 5px; border: none;
+      width: 100%; font-family: inherit;
+    }
+    form button {
+      background: #0ff; color: #000; cursor: pointer;
+    }
+
+    #loginScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000d; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 999; color: #0ff;
+    }
+    #loginScreen input {
+      margin: 0.5rem; padding: 0.5rem;
+      background: #111; border: 1px solid #0ff;
+      color: #0ff; border-radius: 5px;
+    }
+    #loginScreen button {
+      padding: 0.5rem 1rem; background: #0ff;
+      color: #000; border: none;
+      border-radius: 5px; cursor: pointer;
+    }
+
+    #avatar {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff6;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="loginScreen">
+    <h2>Login to EZYERROR Hub</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login / Signup</button>
+    <div style="margin-top: 1rem;">
+      <button onclick="googleLogin()" style="padding: 0.5rem 1rem; background: #fff; color: #000; border: none; border-radius: 5px; cursor: pointer;">
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+
+  <img id="avatar" alt="User Avatar" />
+  <h1>EZYERROR HUB</h1>
+  <div class="stars"></div>
+  <form id="addForm">
+    <input type="text" id="siteName" placeholder="Site Name" required />
+    <input type="url" id="siteURL" placeholder="https://example.com" required />
+    <input type="url" id="iconURL" placeholder="Icon URL" required />
+    <button type="submit">Add Site</button>
+    <button type="button" onclick="toggleMusic()">Toggle Music</button>
+    <button type="button" onclick="logout()">Logout</button>
+  </form>
+  <div class="hub" id="hub"></div>
+  <div class="scroll">▶ Use Arrow Keys / Mouse Wheel / Gamepad</div>
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_1fc1c5970d.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const hub = document.getElementById('hub');
+    const music = document.getElementById('bgMusic');
+    const clickSound = new Audio('https://freesound.org/data/previews/341/341695_6261194-lq.mp3');
+    let currentIndex = 0;
+    let currentUserEmail = "";
+
+    function updateActiveNode() {
+      const nodes = document.querySelectorAll('.node');
+      nodes.forEach((node, i) => node.classList.toggle('active', i === currentIndex));
+      nodes[currentIndex]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    function addNode(name, url, icon) {
+      const node = document.createElement('div');
+      node.className = 'node';
+      node.innerHTML = `<a href="${url}" target="_blank"><img src="${icon}" alt="${name}">${name}</a>`;
+      node.querySelector('a').addEventListener('click', () => clickSound.play());
+      hub.appendChild(node);
+      updateActiveNode();
+    }
+
+    function saveToLocal(name, url, icon) {
+      if (!currentUserEmail) return;
+      db.collection("bookmarks").add({ name, url, icon, user: currentUserEmail, timestamp: Date.now() });
+    }
+
+    function loadUserBookmarks() {
+      if (!currentUserEmail) return;
+      db.collection("bookmarks").where("user", "==", currentUserEmail).orderBy("timestamp").get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const { name, url, icon } = doc.data();
+            addNode(name, url, icon);
+          });
+        });
+    }
+
+    function toggleMusic() {
+      if (music.paused) music.play();
+      else music.pause();
+    }
+
+    document.getElementById('addForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = siteName.value.trim();
+      const url = siteURL.value.trim();
+      const icon = iconURL.value.trim();
+      addNode(name, url, icon);
+      saveToLocal(name, url, icon);
+      e.target.reset();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const total = document.querySelectorAll('.node').length;
+      if (e.key === 'ArrowRight') currentIndex = (currentIndex + 1) % total;
+      else if (e.key === 'ArrowLeft') currentIndex = (currentIndex - 1 + total) % total;
+      updateActiveNode();
+    });
+
+    window.addEventListener('wheel', (e) => {
+      const total = document.querySelectorAll('.node').length;
+      if (e.deltaY > 0) currentIndex = (currentIndex + 1) % total;
+      else currentIndex = (currentIndex - 1 + total) % total;
+      updateActiveNode();
+    });
+
+    window.addEventListener("gamepadconnected", () => {
+      setInterval(() => {
+        const gamepads = navigator.getGamepads();
+        if (!gamepads[0]) return;
+        const xAxis = gamepads[0].axes[0];
+        if (xAxis > 0.5) currentIndex = (currentIndex + 1) % document.querySelectorAll('.node').length;
+        if (xAxis < -0.5) currentIndex = (currentIndex - 1 + document.querySelectorAll('.node').length) % document.querySelectorAll('.node').length;
+        updateActiveNode();
+      }, 300);
+    });
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(user => {
+          currentUserEmail = email;
+          document.getElementById('loginScreen').style.display = 'none';
+          loadUserBookmarks();
+        })
+        .catch(err => {
+          if (err.code === 'auth/user-not-found') {
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+              .then(user => {
+                currentUserEmail = email;
+                document.getElementById('loginScreen').style.display = 'none';
+                loadUserBookmarks();
+              })
+              .catch(e => alert('Signup failed: ' + e.message));
+          } else {
+            alert('Login failed: ' + err.message);
+          }
+        });
+    }
+
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then(result => {
+          currentUserEmail = result.user.email;
+          document.getElementById('loginScreen').style.display = 'none';
+          loadUserBookmarks();
+        })
+        .catch(error => {
+          alert('Google Sign-in failed: ' + error.message);
+        });
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(() => location.reload());
+    }
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        currentUserEmail = user.email;
+        document.getElementById('loginScreen').style.display = 'none';
+        loadUserBookmarks();
+        if (user.photoURL) {
+          const avatar = document.getElementById('avatar');
+          avatar.src = user.photoURL;
+          avatar.style.display = 'block';
+        }
+      } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+        const avatar = document.getElementById('avatar');
+        avatar.style.display = 'none';
+        currentUserEmail = "";
+      }
+    });
+  </script>
+</body>
+</html>
